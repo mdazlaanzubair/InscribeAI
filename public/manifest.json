@@ -1,0 +1,26 @@
+{
+    "manifest_version": 3,
+    "name": "InscribeAI",
+    "version": "1.0.0",
+    "description": "InscribeAI is a Chrome extension designed to help job seekers create personalized cover letters effortlessly. By leveraging AI, InscribeAI crafts tailored cover letters using the job description and your resume, ensuring a professional and personalized touch in your job applications.",
+    "permissions": [
+        "activeTab",
+        "storage",
+        "scripting"
+    ],
+    "icons": {
+        "16": "./icon-16x16.png",
+        "48": "./icon-32x32.png",
+        "128": "./icon-192x192.png"
+    },
+    "action": {
+        "default_popup": "index.html",
+        "default_title": "Open the popup"
+    },
+    "host_permissions": [
+        "https://www.linkedin.com/*"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    }
+}
