@@ -20,7 +20,13 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
           func: getJobDetails,
         })
         .then((queryResult) => {
-          chrome.storage.local.set({ jobDesc: queryResult[0].result });
+          chrome.storage.local.set({
+            jobTitle: queryResult[0].result?.jobTitle,
+          });
+          chrome.storage.local.set({
+            companyName: queryResult[0].result?.companyName,
+          });
+          chrome.storage.local.set({ jobDesc: queryResult[0].result?.jobDesc });
         });
     }
   }
@@ -28,7 +34,15 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
 // FUNCTION TO SELECT JOB DETAILS ELEMENT AND EXTRACT ITS CONTENT
 const getJobDetails = () => {
-  const jobDetailsElement = document.getElementById("job-details");
+  const jobTitle =
+    document.body
+      .querySelector(".job-details-jobs-unified-top-card__job-title")
+      .textContent.replace(/\s\s+/g, "") ?? null;
+  const companyName =
+    document.body
+      .querySelector(".job-details-jobs-unified-top-card__company-name")
+      .textContent.replace(/\s\s+/g, "") ?? null;
+  const jobDetailsElement = document.getElementById("job-details") ?? null;
 
   if (jobDetailsElement) {
     jobDetailsElement.style.border = "3px solid blue";
@@ -36,6 +50,7 @@ const getJobDetails = () => {
     jobDetailsElement.style.padding = "1.25rem";
     // EXTRACTING JOB DESCRIPTION AND CLEANING ALL EXTRA SPACES
     const jobDesc = jobDetailsElement.textContent.replace(/\s\s+/g, "");
-    return jobDesc;
+
+    return { jobDesc, jobTitle, companyName };
   }
 };

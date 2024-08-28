@@ -1,15 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { getLocalData } from "../../helpers";
 
 const LetterGenerator = ({ data, changePage }) => {
   const [userData, setUserData] = useState(data);
 
+  // PERFORMING SIDE EFFECT ON COMPONENT MOUNT TO GRAB THE JOB
+  // DESCRIPTION FROM LOCAL STORAGE THAT IS SCRAPED BY BACKGROUND SCRIPT
+  useEffect(() => {
+    // FETCHING DATA FROM CHROME STORAGE ASYNCHRONOUSLY
+    const fetchLocalStorage = async () => {
+      // STORING ASYNC VALUE IN SEPARATE VARIABLE
+      const jobDesc = await getLocalData("jobDesc");
+      const jobTitle = await getLocalData("jobTitle");
+      const companyName = await getLocalData("companyName");
+      setUserData({ ...userData, jobDesc, companyName, jobTitle });
+    };
+
+    fetchLocalStorage();
+  }, []);
+
   return (
     <>
       <div className="w-full flex flex-col gap-3">
-        <div className="flex text-lg items-start justify-between gap-5">
-          <h1 className="font-bold flex-grow">
-            Job Title Here - Job Title Here - Job Title Here
-          </h1>
+        <div className="flex items-start justify-between gap-5">
+          <div className="flex-grow">
+            <h1 className="font-bold text-lg">{userData?.jobTitle}</h1>
+            <sup className="text-xs text-blue-600">
+              @{userData?.companyName}
+            </sup>
+          </div>
           <button
             onClick={changePage}
             title="Profile Settings"
@@ -45,7 +64,9 @@ const LetterGenerator = ({ data, changePage }) => {
             className="input-box"
             placeholder="Your cover letter goes here..."
             rows="5"
-          />
+          >
+            {userData?.jobDesc}
+          </textarea>
         </div>
         <div className="flex text-lg items-center justify-between gap-3">
           <button className="px-2 py-2 flex items-center gap-1 rounded-lg text-sm text-white bg-blue-600 hover:bg-blue-800 hover:shadow-sm transition-colors duration-500 ease-in-out">

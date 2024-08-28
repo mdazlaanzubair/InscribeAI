@@ -7,7 +7,7 @@ function isChromeExtension() {
 export const saveDataLocally = (key, value) => {
   if (isChromeExtension()) {
     try {
-      chrome.storage.local.set({ [key]: data });
+      chrome.storage.local.set({ [key]: value });
     } catch (error) {
       console.error("Unexpected error occurred while saving data: ", error);
     }
