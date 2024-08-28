@@ -15,7 +15,7 @@
     },
     "action": {
         "default_popup": "index.html",
-        "default_title": "Open the popup"
+        "default_title": "Open the InscribeAI"
     },
     "host_permissions": [
         "https://www.linkedin.com/*"
