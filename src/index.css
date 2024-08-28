@@ -2,8 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   border: none;
+}
+
+@layer components {
+  .input-box {
+    @apply py-1 px-2 text-sm rounded-lg border-2 border-transparent focus:outline-none focus:border-blue-500 transition-colors ease-in-out duration-500;
+  }
 }
