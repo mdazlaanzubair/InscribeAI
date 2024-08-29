@@ -6,7 +6,7 @@ const ProfileContainer = ({ data, changePage }) => {
     <div className="w-full flex flex-col gap-3">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">Profile</h1>
+          <h1 className="text-lg font-bold">Configuration</h1>
         </div>
         {data && (
           <button

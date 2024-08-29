@@ -30,3 +30,22 @@ export const getLocalData = async (key) => {
     return Promise.resolve(JSON.parse(localStorage.getItem(key)));
   }
 };
+
+// FUNCTION TO REMOVE DATA FROM LOCAL STORAGE
+export const removeLocalData = async (keys = ["apiKey", "resume"]) => {
+  if (isChromeExtension()) {
+    try {
+      // Remove data from Chrome extension storage
+      await chrome.storage.local.remove(keys);
+      return;
+    } catch (error) {
+      console.error("Error removing data from Chrome storage:", error);
+    }
+  } else {
+    // Remove data from browser localStorage
+    keys.forEach((key) => {
+      localStorage.removeItem(key);
+    });
+    return;
+  }
+};

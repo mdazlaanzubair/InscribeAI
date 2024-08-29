@@ -26,6 +26,9 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
           chrome.storage.local.set({
             companyName: queryResult[0].result?.companyName,
           });
+          chrome.storage.local.set({
+            candidateName: queryResult[0].result?.candidateName,
+          });
           chrome.storage.local.set({ jobDesc: queryResult[0].result?.jobDesc });
         });
     }
@@ -42,6 +45,8 @@ const getJobDetails = () => {
     document.body
       .querySelector(".job-details-jobs-unified-top-card__company-name")
       .textContent.replace(/\s\s+/g, "") ?? null;
+  const candidateName =
+    document.getElementById("#ember18").alt.replace(/\s\s+/g, "") ?? null;
   const jobDetailsElement = document.getElementById("job-details") ?? null;
 
   if (jobDetailsElement) {
@@ -51,6 +56,6 @@ const getJobDetails = () => {
     // EXTRACTING JOB DESCRIPTION AND CLEANING ALL EXTRA SPACES
     const jobDesc = jobDetailsElement.textContent.replace(/\s\s+/g, "");
 
-    return { jobDesc, jobTitle, companyName };
+    return { jobDesc, jobTitle, companyName, candidateName };
   }
 };

@@ -8,8 +8,8 @@ const CHATGPT_MODEL = "gpt-3.5-turbo";
 export const talkToGPT = async (
   jobTitle,
   companyName,
-  resume,
   jobDesc,
+  resume,
   apiKey
 ) => {
   // VALIDATING REQUIRED PARAMETERS
