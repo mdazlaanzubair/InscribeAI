@@ -1,7 +1,7 @@
 import React from "react";
 import { ProfileForm } from "./components";
 
-const ProfileContainer = ({ data, changePage }) => {
+const ProfileContainer = ({ data, toGenerator }) => {
   return (
     <div className="w-full flex flex-col gap-3">
       <div className="flex items-center justify-between gap-3">
@@ -10,7 +10,7 @@ const ProfileContainer = ({ data, changePage }) => {
         </div>
         {data && (
           <button
-            onClick={changePage}
+            onClick={toGenerator}
             className="px-2 py-2 rounded-lg text-sm bg-slate-200 hover:bg-slate-300/70 hover:shadow-sm transition-colors duration-500 ease-in-out"
           >
             <svg
@@ -31,7 +31,7 @@ const ProfileContainer = ({ data, changePage }) => {
         )}
       </div>
       <hr className="bg-slate-400" />
-      <ProfileForm data={data} changePage={changePage} />
+      <ProfileForm data={data} toGenerator={toGenerator} />
     </div>
   );
 };

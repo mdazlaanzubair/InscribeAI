@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getLocalData, talkToGPT, talkToGemini } from "../../helpers";
 import { Footer, Header, LetterDisplay, ModelSelector } from "./components";
 
-const LetterGenerator = ({ changePage }) => {
+const LetterGenerator = ({ toProfile }) => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [letter, setLetter] = useState("");
@@ -77,7 +77,7 @@ const LetterGenerator = ({ changePage }) => {
           }));
         } else {
           setData(null);
-          changePage("profile");
+          toProfile();
           break;
         }
       }
@@ -89,7 +89,7 @@ const LetterGenerator = ({ changePage }) => {
   return (
     <>
       <div className="w-full flex flex-col gap-3">
-        <Header candidateName={data?.candidateName} changePage={changePage} />
+        <Header candidateName={data?.candidateName} toProfile={toProfile} />
         <ModelSelector selectAI={selectAI} setSelectAI={setSelectAI} />
         {!isLoading && (
           <LetterDisplay

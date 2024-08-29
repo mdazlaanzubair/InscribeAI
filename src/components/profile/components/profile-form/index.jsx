@@ -30,7 +30,7 @@ const schema = yup
   })
   .required();
 
-const ProfileForm = ({ data, changePage }) => {
+const ProfileForm = ({ data, toGenerator }) => {
   const [isShowKey, setIsShowKey] = useState(false);
 
   // INITIALIZING FORM WITH VALIDATION SCHEMA
@@ -54,7 +54,7 @@ const ProfileForm = ({ data, changePage }) => {
     saveDataLocally("apiKey", values?.apiKey);
     saveDataLocally("resume", values?.resume);
 
-    setTimeout(() => changePage(), 1500);
+    setTimeout(toGenerator, 1500);
   };
 
   // FUNCTION TO SET THE EXTRACTED FILE DATA IN THE

@@ -1,6 +1,6 @@
 import React from "react";
 
-const Header = ({ candidateName = "to Inscribe AI", changePage }) => {
+const Header = ({ candidateName = "to Inscribe AI", toProfile }) => {
   return (
     <>
       <div className="flex items-start justify-between gap-5">
@@ -8,7 +8,7 @@ const Header = ({ candidateName = "to Inscribe AI", changePage }) => {
           <h1 className="font-bold text-lg">{`Welcome ${candidateName}!`}</h1>
         </div>
         <button
-          onClick={changePage}
+          onClick={toProfile}
           title="Profile Settings"
           className="px-2 py-2 flex items-center gap-1 rounded-lg text-sm bg-slate-200 hover:bg-slate-300/70 hover:shadow-sm transition-colors duration-500 ease-in-out"
         >
