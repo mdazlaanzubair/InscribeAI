@@ -2,7 +2,7 @@ import React from "react";
 
 const LetterDisplay = ({ error, letter, jobTitle, companyName }) => {
   return (
-    <div className="col-span-2 flex flex-col gap-3">
+    <div className="col-span-2 text-sm flex flex-col gap-3">
       {letter?.length > 0 && !error && (
         <>
           <strong className="pl-1 pt-3 opacity-70">
@@ -22,7 +22,9 @@ const LetterDisplay = ({ error, letter, jobTitle, companyName }) => {
         </>
       )}
       {error && (
-        <strong className="text-xs pl-1 pt-3 opacity-70">{error}</strong>
+        <strong className="text-xs text-red-500 pl-1 pt-3 opacity-70">
+          {error}
+        </strong>
       )}
     </div>
   );

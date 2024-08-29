@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 
-const Footer = ({ isLoading, generateCoverLetter, selectAI, letter }) => {
+const Footer = ({
+  error,
+  isLoading,
+  generateCoverLetter,
+  selectAI,
+  letter,
+}) => {
   const [isCopied, setIsCopied] = useState(false);
 
   // FUNCTION TO HANDLE COPY TO CLIPBOARD FUNCTIONALITY
@@ -53,11 +59,11 @@ const Footer = ({ isLoading, generateCoverLetter, selectAI, letter }) => {
           </svg>
         )}
 
-        <span className="mr-1">
+        <span>
           {`${isLoading ? "Generating" : "Generate"} with ${selectAI}`}
         </span>
       </button>
-      {letter?.length > 0 && (
+      {letter?.length > 0 && !error && (
         <button
           type="button"
           onClick={copyToClipboard}

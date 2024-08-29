@@ -3,7 +3,14 @@ import { getLocalData, talkToGPT, talkToGemini } from "../../helpers";
 import { Footer, Header, LetterDisplay, ModelSelector } from "./components";
 
 const LetterGenerator = ({ toProfile }) => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState({
+    apiKey: "",
+    resume: "",
+    jobDesc: "",
+    jobTitle: "",
+    companyName: "",
+    candidateName: "",
+  });
   const [error, setError] = useState(null);
   const [letter, setLetter] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -55,32 +62,35 @@ const LetterGenerator = ({ toProfile }) => {
   useEffect(() => {
     // FETCHING DATA FROM CHROME STORAGE ASYNCHRONOUSLY
     const fetchLocalStorage = async () => {
-      const keys = [
-        "apiKey",
-        "resume",
-        "jobDesc",
-        "jobTitle",
-        "companyName",
-        "candidateName",
-      ];
+      // LOOPING THROUGH KEYS TO FETCH VALUES FROM LOCAL STORAGE
+      const keys = Object.keys(data);
+      const reqKeys = ["apiKey", "resume"];
+      const localDataArr = await Promise.all(
+        keys.map(async (key) => {
+          const value = await getLocalData(key);
+          // RETURNING KEY VALUE PAIRS TO CREATE OBJECT FROM ARRAY IN LINE 77
+          return [key, value];
+        })
+      );
 
-      // USING for...of LOOP TO await EACH ASYNC TASK STORING ASYNC VALUE IN SEPARATE VARIABLE
-      for (const key of keys) {
-        const value = await getLocalData(key);
+      // CONVERTING ARRAY INTO OBJECT
+      const localDataObject = Object.fromEntries(localDataArr);
 
-        // CHECKING IF THE VALUE IS WELL DEFINED  UPDATE THE VALUE IN LOCAL COMPONENT STATE
-        // ELSE: BREAK OUT FROM LOOP IF A SINGLE VALUE IS MISSING AND REDIRECT TO PROFILE PAGE
-        if (value && value?.length > 0) {
-          setData((prev) => ({
-            ...prev,
-            [key]: value,
-          }));
-        } else {
-          setData(null);
-          toProfile();
-          break;
-        }
+      // CHECKING IF THE REQUIRED FIELDS / USER INPUTS ARE EMPTY
+      const isEmpty = reqKeys.some(
+        (key) => !localDataObject[key] || localDataObject[key].length <= 0
+      );
+
+      if (isEmpty) {
+        setData(null);
+        toProfile();
+        return;
       }
+
+      setData((prev) => ({
+        ...prev,
+        ...localDataObject,
+      }));
     };
 
     fetchLocalStorage();
@@ -100,7 +110,8 @@ const LetterGenerator = ({ toProfile }) => {
           />
         )}
         <Footer
-          isLoading={isLoading}
+            error={error}
+            isLoading={isLoading}
           generateCoverLetter={generateCoverLetter}
           selectAI={selectAI}
           letter={letter}

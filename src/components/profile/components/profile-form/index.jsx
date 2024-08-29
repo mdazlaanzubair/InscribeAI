@@ -38,13 +38,18 @@ const ProfileForm = ({ toGenerator }) => {
 
   // WATCHING CHANGE IN FORM FIELDS
   const { apiKey, resume } = watch();
+  const [isLoading, setIsLoading] = useState(false);
 
   // FUNCTION TO SAVE DATA IN THE DATABASE AND LOCAL STORAGE
   const saveProfileData = async (values) => {
+    setIsLoading(true);
     await saveDataLocally("apiKey", values?.apiKey);
     await saveDataLocally("resume", values?.resume);
 
-    setTimeout(toGenerator, 1500);
+    setTimeout(() => {
+      toGenerator();
+      setIsLoading(false);
+    }, 1500);
   };
 
   // FUNCTION TO RESET ALL USER DATA
@@ -163,10 +168,28 @@ const ProfileForm = ({ toGenerator }) => {
 
       <div className="flex items-center justify-end gap-3">
         <button
+          disabled={isLoading}
           type="submit"
-          className="px-3 py-2 w-20 rounded-lg text-white text-sm bg-blue-600 hover:bg-blue-800 hover:shadow-sm transition-colors duration-500 ease-in-out"
+          className="px-3 py-2 w-fit flex gap-2 items-center justify-center rounded-lg text-white text-sm bg-blue-600 hover:bg-blue-800 hover:shadow-sm transition-colors duration-500 ease-in-out"
         >
-          Save
+          {isLoading && (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-4 animate-spin"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+              />
+            </svg>
+          )}
+
+          <span>{`${isLoading ? "Saving" : "Save"}`}</span>
         </button>
         <button
           onClick={resetUserData}
