@@ -46,7 +46,9 @@ const getJobDetails = () => {
       .querySelector(".job-details-jobs-unified-top-card__company-name")
       .textContent.replace(/\s\s+/g, "") ?? null;
   const candidateName =
-    document.getElementById("#ember18").alt.replace(/\s\s+/g, "") ?? null;
+    document
+      .getElementById(".global-nav__me-photo")
+      ?.alt.replace(/\s\s+/g, "") ?? null;
   const jobDetailsElement = document.getElementById("job-details") ?? null;
 
   if (jobDetailsElement) {
