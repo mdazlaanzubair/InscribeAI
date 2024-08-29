@@ -30,7 +30,7 @@ const schema = yup
   })
   .required();
 
-const ProfileForm = ({ data, toGenerator }) => {
+const ProfileForm = ({ toGenerator }) => {
   const [isShowKey, setIsShowKey] = useState(false);
 
   // INITIALIZING FORM WITH VALIDATION SCHEMA
@@ -48,6 +48,9 @@ const ProfileForm = ({ data, toGenerator }) => {
       resume: "",
     },
   });
+
+  // WATCHING CHANGE IN FORM FIELDS
+  const { apiKey, resume } = watch();
 
   // FUNCTION TO SAVE DATA IN THE DATABASE AND LOCAL STORAGE
   const saveProfileData = async (values) => {
@@ -80,17 +83,32 @@ const ProfileForm = ({ data, toGenerator }) => {
     });
 
     // REMOVING USER DATA FROM LOCAL STORAGE TOO
+    // IT WILL ONLY REMOVE USER PROVIDED VALUE
     removeLocalData();
   };
 
   // PERFORMING SIDE EFFECT ON COMPONENT MOUNT TO
   // CHECK IF DATA IN LOCAL STORAGE EXIST
   useEffect(() => {
-    if (data) {
-      Object.keys(data).forEach((key) => setValue(key, data[key]));
-      setIsShowKey(false);
-    }
-  }, [data]);
+    // FETCHING DATA FROM CHROME STORAGE ASYNCHRONOUSLY
+    const fetchLocalStorage = async () => {
+      const apiKey = await getLocalData("apiKey");
+      const resume = await getLocalData("resume");
+
+      setValue("apiKey", apiKey);
+      setValue("resume", resume);
+    };
+
+    fetchLocalStorage();
+  }, []);
+
+  // PERFORMING SIDE EFFECT ON FIELDS VALUE CHANGE
+  // AND STORE VALUES IN STORAGE IN REALTIME
+  useEffect(() => {
+    saveDataLocally("apiKey", apiKey);
+    saveDataLocally("resume", resume);
+    console.log("resume changed",resume);
+  }, [apiKey, resume]);
 
   return (
     <form
@@ -103,6 +121,7 @@ const ProfileForm = ({ data, toGenerator }) => {
             className={`input-box ${errors.apiKey ? "border-red-500" : ""}`}
             type={isShowKey ? "text" : "password"}
             placeholder="Enter your secret key"
+            onChange={(e) => console.log("input", e.target.value)}
             {...register("apiKey")}
           />
           {errors.apiKey && (
