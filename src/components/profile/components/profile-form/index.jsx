@@ -5,7 +5,6 @@ import * as yup from "yup";
 import {
   getLocalData,
   removeLocalData,
-  resumeReader,
   saveDataLocally,
 } from "../../../../helpers";
 
@@ -14,20 +13,7 @@ const schema = yup
   .object()
   .shape({
     apiKey: yup.string().required("API Key is required"),
-    resume: yup.string(),
-    file: yup.mixed().when("resume", {
-      is: (resume) => !resume || resume.trim() === "", // ONLY VALIDATE IF RESUME IS EMPTY
-      then: (schema) =>
-        schema
-          .required("Resume is required")
-          .test("fileFormat", "Only PDF files are accepted", (value) => {
-            return value && value[0]?.type === "application/pdf";
-          })
-          .test("fileSize", "File size should be less than 3 MB", (value) => {
-            return value && value[0]?.size <= 3 * 1024 * 1024;
-          }),
-      otherwise: (schema) => schema.notRequired(), // SKIP VALIDATION IF RESUME HAS VALUE
-    }),
+    resume: yup.string().required("Resume is required"),
   })
   .required();
 
@@ -61,21 +47,6 @@ const ProfileForm = ({ toGenerator }) => {
     setTimeout(toGenerator, 1500);
   };
 
-  // FUNCTION TO SET THE EXTRACTED FILE DATA IN THE
-  // FORM FIELD AND RENDER IN TEXTAREA ON FILE UPLOAD
-  const onFileUpload = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      try {
-        const extractedText = await resumeReader(file);
-        saveDataLocally("resume", extractedText);
-        setValue("resume", extractedText);
-      } catch (error) {
-        console.error("Error reading file:", error);
-      }
-    }
-  };
-
   // FUNCTION TO RESET ALL USER DATA
   const resetUserData = () => {
     // RESETTING FORM TO INITIAL VALUE
@@ -107,9 +78,15 @@ const ProfileForm = ({ toGenerator }) => {
   // PERFORMING SIDE EFFECT ON FIELDS VALUE CHANGE
   // AND STORE VALUES IN STORAGE IN REALTIME
   useEffect(() => {
-    saveDataLocally("apiKey", apiKey);
-    console.log("resume changed", apiKey);
-  }, [apiKey]);
+    const saveRealtimeDataLocally = async (key, value) => {
+      if (value?.length > 10) {
+        await saveDataLocally(key, value);
+      }
+    };
+
+    saveRealtimeDataLocally("apiKey", apiKey);
+    saveRealtimeDataLocally("resume", resume);
+  }, [apiKey, resume]);
 
   return (
     <form
@@ -122,7 +99,6 @@ const ProfileForm = ({ toGenerator }) => {
             className={`input-box ${errors.apiKey ? "border-red-500" : ""}`}
             type={isShowKey ? "text" : "password"}
             placeholder="Enter your secret key"
-            onChange={(e) => console.log("input", e.target.value)}
             {...register("apiKey")}
           />
           {errors.apiKey && (
@@ -173,28 +149,16 @@ const ProfileForm = ({ toGenerator }) => {
         </button>
       </div>
 
-      <div className="flex flex-col">
-        <input
-          type="file"
-          accept="application/pdf"
-          onChange={onFileUpload}
-          className={`input-box p-[0.1rem] ${
-            errors.file ? "border-red-500" : ""
-          }`}
-          // {...register("file")}
-        />
-        {errors.file && (
-          <p className="text-red-500 text-xs">{errors.file.message}</p>
-        )}
-      </div>
-
       <div className="flex flex-col col-span-2">
         <textarea
-          className={`input-box`}
+          className={`input-box ${errors.resume ? "border-red-500" : ""}`}
           placeholder="Paste resume text here..."
           rows="8"
           {...register("resume")}
         />
+        {errors.resume && (
+          <p className="text-red-500 text-xs">{errors.resume.message}</p>
+        )}
       </div>
 
       <div className="flex items-center justify-end gap-3">

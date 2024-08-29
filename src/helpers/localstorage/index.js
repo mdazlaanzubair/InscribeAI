@@ -5,6 +5,8 @@ function isChromeExtension() {
 
 // FUNCTION TO SAVE USER DATA IN LOCAL STORAGE
 export const saveDataLocally = (key, value) => {
+  console.log("Saving these key/value pairs", key, ":", value);
+
   if (isChromeExtension()) {
     try {
       chrome.storage.local.set({ [key]: value });
