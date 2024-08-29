@@ -1,7 +1,9 @@
 import * as pdfjsLib from "pdfjs-dist";
 
 // SETTING THE WORK-SRC FOR PDFJSLIB
-pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.worker.min.mjs";
+pdfjsLib.GlobalWorkerOptions.workerSrc = chrome.runtime.getURL(
+  "libs/pdf.worker.min.mjs"
+);
 
 // FUNCTION TO READ THE PDF, EXTRACT TEXT AND RETURN
 export async function resumeReader(file) {

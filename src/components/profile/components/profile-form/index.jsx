@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import {
+  getLocalData,
   removeLocalData,
   resumeReader,
   saveDataLocally,
@@ -54,8 +55,8 @@ const ProfileForm = ({ toGenerator }) => {
 
   // FUNCTION TO SAVE DATA IN THE DATABASE AND LOCAL STORAGE
   const saveProfileData = async (values) => {
-    saveDataLocally("apiKey", values?.apiKey);
-    saveDataLocally("resume", values?.resume);
+    await saveDataLocally("apiKey", values?.apiKey);
+    await saveDataLocally("resume", values?.resume);
 
     setTimeout(toGenerator, 1500);
   };
@@ -67,6 +68,7 @@ const ProfileForm = ({ toGenerator }) => {
     if (file) {
       try {
         const extractedText = await resumeReader(file);
+        saveDataLocally("resume", extractedText);
         setValue("resume", extractedText);
       } catch (error) {
         console.error("Error reading file:", error);
@@ -106,9 +108,8 @@ const ProfileForm = ({ toGenerator }) => {
   // AND STORE VALUES IN STORAGE IN REALTIME
   useEffect(() => {
     saveDataLocally("apiKey", apiKey);
-    saveDataLocally("resume", resume);
-    console.log("resume changed",resume);
-  }, [apiKey, resume]);
+    console.log("resume changed", apiKey);
+  }, [apiKey]);
 
   return (
     <form
