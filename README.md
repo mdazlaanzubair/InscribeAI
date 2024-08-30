@@ -11,13 +11,10 @@
 
 ## Installation
 
-1. **Download the Extension:**
-   - Visit the [Chrome Web Store](https://chrome.google.com/webstore) and search for "InscribeAI".
-   - Click "Add to Chrome" and follow the prompts to install the extension.
-
-2. **Set Up:**
-   - After installation, open the extension and log in with your LinkedIn credentials.
-   - Upload your resume and allow the extension to access job descriptions.
+1. **Clone** this [repository](https://github.com/mdazlaanzubair/InscribeAI.git).
+2. **Open** Chrome and navigate to [chrome://extensions/](chrome://extensions/).
+3. **Enable** `Developer mode` by toggling the switch in the top right corner.
+4. **Click** "Load unpacked" and select the cloned repo folder.
 
 ## Usage
 
